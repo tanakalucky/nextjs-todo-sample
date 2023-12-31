@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useSWR from 'swr';
 import { SVGProps } from 'react';
+import { CreateModal } from '@/components/create-modal';
 
 export function Todo() {
   async function fetcher(url: string): Promise<{ items: { id: number; contents: string }[] } | null> {
@@ -33,7 +34,7 @@ export function Todo() {
           </div>
         ))}
       </Card>
-      <Button className='w-full'>Add New Task</Button>
+      <CreateModal />
     </div>
   );
 }
