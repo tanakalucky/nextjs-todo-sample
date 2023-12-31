@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import useSWR from 'swr';
 import { SVGProps } from 'react';
 import { CreateModal } from '@/components/create-modal';
+import axios from 'axios';
 
 export function Todo() {
   async function fetcher(url: string): Promise<{ items: { id: number; contents: string }[] } | null> {
@@ -17,6 +18,13 @@ export function Todo() {
   }
   const { data } = useSWR('/api/todo', fetcher, { refreshInterval: 0 });
   const todos = data?.items ?? [];
+
+  const onDelete = async (id: number) => {
+    await axios('http://0.0.0.0:8000/todo/delete', {
+      method: 'delete',
+      data: { id },
+    });
+  };
 
   return (
     <div className='w-full max-w-lg mx-auto p-6 space-y-4'>
@@ -28,7 +36,7 @@ export function Todo() {
             <Button className='w-6 h-6 p-0 text-white bg-black'>
               <PencilIcon className='w-4 h-4' />
             </Button>
-            <Button className='w-6 h-6 p-0 text-white bg-black'>
+            <Button className='w-6 h-6 p-0 text-white bg-black' onClick={() => onDelete(todo.id)}>
               <TrashIcon className='w-4 h-4' />
             </Button>
           </div>
