@@ -1,6 +1,6 @@
-import { useTodosStore } from '@/lib/store';
 import { useEffect } from 'react';
 import { getTodos } from '@/lib/api';
+import { useTodosStore } from '@/store';
 
 export const useTodos = () => {
   const todos = useTodosStore((state) => state.todos);
