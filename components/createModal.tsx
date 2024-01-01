@@ -8,15 +8,16 @@ import { CardTitle, CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent } from 'react';
 import axios from 'axios';
+import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
+import { getTodos } from '@/lib/api';
+import { useTodos } from '@/lib/hooks';
 
 export function CreateModal() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
+  const isOpen = useCreateTodoModalStore((state) => state.isOpen);
+  const close = useCreateTodoModalStore((state) => state.close);
+  const { setTodos } = useTodos();
 
   const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
     e.preventDefault();
@@ -28,14 +29,18 @@ export function CreateModal() {
     await axios('http://0.0.0.0:8000/todo', {
       method: 'put',
       data: { contents: target.contents.value },
+    }).then(() => {
+      close();
+
+      getTodos(
+        (res) => setTodos(res),
+        (error) => console.log('error ocurred ', error),
+      );
     });
   };
 
   return (
     <>
-      <Button className='bg-black text-white' onClick={toggleModal}>
-        Add New Task
-      </Button>
       {isOpen && (
         <div className='ma fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 z-0'>
           <Card className='mx-auto my-4 p-4 w-[80vw] max-w-[500px] bg-white'>
@@ -49,9 +54,11 @@ export function CreateModal() {
                   <Input id='todo-title' placeholder='Enter the todo' name='contents' />
                 </div>
                 <div className='flex justify-end'>
-                  <Button onClick={toggleModal}>close</Button>
-                  <Button className='w-32' type='submit'>
-                    Submit Todo
+                  <Button className='bg-black text-white' onClick={close}>
+                    close
+                  </Button>
+                  <Button className='w-32 bg-black text-white' type='submit'>
+                    Submit
                   </Button>
                 </div>
               </form>

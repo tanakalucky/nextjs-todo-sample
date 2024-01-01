@@ -6,9 +6,11 @@ import { SVGProps } from 'react';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { getTodos } from '@/lib/api';
+import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
 
 export default function Page() {
   const { todos, setTodos } = useTodos();
+  const openCreateModal = useCreateTodoModalStore((state) => state.open);
 
   const onDelete = async (id: number) => {
     axios('http://0.0.0.0:8000/todo/delete', {
@@ -38,7 +40,9 @@ export default function Page() {
           </div>
         ))}
       </Card>
-      <Button className='bg-black text-white'>Add New Task</Button>
+      <Button className='bg-black text-white' onClick={openCreateModal}>
+        Add New Task
+      </Button>
     </>
   );
 }
