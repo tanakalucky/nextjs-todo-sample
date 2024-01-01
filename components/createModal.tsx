@@ -9,9 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SyntheticEvent } from 'react';
-import axios from 'axios';
 import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
-import { getTodos } from '@/lib/api';
+import { createTodo, getTodos } from '@/lib/api';
 import { useTodos } from '@/lib/hooks';
 
 export function CreateModal() {
@@ -26,17 +25,18 @@ export function CreateModal() {
       contents: { value: string };
     };
 
-    await axios('http://0.0.0.0:8000/todo', {
-      method: 'put',
-      data: { contents: target.contents.value },
-    }).then(() => {
-      close();
+    await createTodo(
+      { contents: target.contents.value },
+      () => {
+        close();
 
-      getTodos(
-        (res) => setTodos(res),
-        (error) => console.log('error ocurred ', error),
-      );
-    });
+        getTodos(
+          (res) => setTodos(res),
+          (error) => console.log('error ocurred ', error),
+        );
+      },
+      (error) => console.log('error ocurred ', error),
+    );
   };
 
   return (

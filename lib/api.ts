@@ -1,5 +1,5 @@
 import { Todo } from '@/lib/defenitions';
-import { get } from '@/lib/axios';
+import { get, put } from '@/lib/axios';
 
 type Error = {
   message: string;
@@ -12,4 +12,16 @@ export const getTodos = (handleSuccess: (res: Todo[]) => void, handleFailure: (e
     (res) => handleSuccess(res.items),
     (error) => handleFailure(error as Error),
   );
+};
+
+type CreateTodoRequest = {
+  contents: string;
+};
+
+export const createTodo = (
+  data: CreateTodoRequest,
+  handleSuccess: () => void,
+  handleFailure: (error: Error) => void,
+) => {
+  put('http://0.0.0.0:8000/todo', data, handleSuccess, (error) => handleFailure(error as Error));
 };
