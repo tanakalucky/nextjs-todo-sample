@@ -6,23 +6,34 @@
  */
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import useSWR from 'swr';
-import { SVGProps } from 'react';
+import { SVGProps, useEffect } from 'react';
 import { CreateModal } from '@/components/create-modal';
 import axios from 'axios';
+import { useTodosStore } from '@/lib/store';
+import { Todo } from '@/lib/defenitions';
 
 export function Todo() {
-  async function fetcher(url: string): Promise<{ items: { id: number; contents: string }[] } | null> {
-    const response = await fetch(url);
-    return response.json();
-  }
-  const { data } = useSWR('/api/todo', fetcher, { refreshInterval: 0 });
-  const todos = data?.items ?? [];
+  const todos = useTodosStore((state) => state.todos);
+  const setTodos = useTodosStore((state) => state.setTodos);
+
+  useEffect(() => {
+    axios<{ items: Todo[] }>('http://0.0.0.0:8000/todo', {
+      method: 'get',
+    }).then((res) => {
+      setTodos(res.data.items);
+    });
+  }, []);
 
   const onDelete = async (id: number) => {
-    await axios('http://0.0.0.0:8000/todo/delete', {
+    axios('http://0.0.0.0:8000/todo/delete', {
       method: 'delete',
       data: { id },
+    }).then(() => {
+      axios<{ items: Todo[] }>('http://0.0.0.0:8000/todo', {
+        method: 'get',
+      }).then((res) => {
+        setTodos(res.data.items);
+      });
     });
   };
 
