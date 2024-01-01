@@ -4,24 +4,24 @@ import { Card } from '@/components/ui/card';
 import { useTodos } from '@/lib/hooks';
 import { SVGProps } from 'react';
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import { getTodos } from '@/lib/api';
+import { deleteTodo, getTodos } from '@/lib/api';
 import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
 
 export default function Page() {
   const { todos, setTodos } = useTodos();
   const openCreateModal = useCreateTodoModalStore((state) => state.open);
 
-  const onDelete = async (id: number) => {
-    axios('http://0.0.0.0:8000/todo/delete', {
-      method: 'delete',
-      data: { id },
-    }).then(() => {
-      getTodos(
-        (res) => setTodos(res),
-        (error) => console.log('error ocurred ', error),
-      );
-    });
+  const onDelete = (id: number) => {
+    deleteTodo(
+      { id },
+      () => {
+        getTodos(
+          (res) => setTodos(res),
+          (error) => console.log('error occurred ', error),
+        );
+      },
+      (error) => console.log('error occurred ', error),
+    );
   };
 
   return (

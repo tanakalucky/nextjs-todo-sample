@@ -32,10 +32,10 @@ export function CreateModal() {
 
         getTodos(
           (res) => setTodos(res),
-          (error) => console.log('error ocurred ', error),
+          (error) => console.log('error occurred ', error),
         );
       },
-      (error) => console.log('error ocurred ', error),
+      (error) => console.log('error occurred ', error),
     );
   };
 

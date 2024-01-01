@@ -1,5 +1,5 @@
 import { Todo } from '@/lib/defenitions';
-import { get, put } from '@/lib/axios';
+import { deleteAPI, get, put } from '@/lib/axios';
 
 type Error = {
   message: string;
@@ -24,4 +24,16 @@ export const createTodo = (
   handleFailure: (error: Error) => void,
 ) => {
   put('http://0.0.0.0:8000/todo', data, handleSuccess, (error) => handleFailure(error as Error));
+};
+
+type DeleteTodoRequest = {
+  id: number;
+};
+
+export const deleteTodo = (
+  data: DeleteTodoRequest,
+  handleSuccess: () => void,
+  handleFailure: (error: Error) => void,
+) => {
+  deleteAPI('http://0.0.0.0:8000/todo/delete', data, handleSuccess, (error) => handleFailure(error as Error));
 };
