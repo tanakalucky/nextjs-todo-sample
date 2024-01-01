@@ -6,34 +6,24 @@
  */
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { SVGProps, useEffect } from 'react';
+import { SVGProps } from 'react';
 import { CreateModal } from '@/components/create-modal';
 import axios from 'axios';
-import { useTodosStore } from '@/lib/store';
-import { Todo } from '@/lib/defenitions';
+import { useTodos } from '@/lib/hooks';
+import { getTodos } from '@/lib/api';
 
 export function Todo() {
-  const todos = useTodosStore((state) => state.todos);
-  const setTodos = useTodosStore((state) => state.setTodos);
-
-  useEffect(() => {
-    axios<{ items: Todo[] }>('http://0.0.0.0:8000/todo', {
-      method: 'get',
-    }).then((res) => {
-      setTodos(res.data.items);
-    });
-  }, []);
+  const { todos, setTodos } = useTodos();
 
   const onDelete = async (id: number) => {
     axios('http://0.0.0.0:8000/todo/delete', {
       method: 'delete',
       data: { id },
     }).then(() => {
-      axios<{ items: Todo[] }>('http://0.0.0.0:8000/todo', {
-        method: 'get',
-      }).then((res) => {
-        setTodos(res.data.items);
-      });
+      getTodos(
+        (res) => setTodos(res),
+        (error) => console.log('error ocurred ', error),
+      );
     });
   };
 
