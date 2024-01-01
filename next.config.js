@@ -2,7 +2,7 @@
 const rewrites = [
   {
     source: '/api/:path*',
-    destination: 'http://host.docker.internal:8000/:path*',
+    destination: `${process.env.API_URL}/:path*`,
   },
 ];
 
