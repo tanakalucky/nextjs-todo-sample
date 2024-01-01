@@ -25,7 +25,7 @@ export function CreateModal() {
       contents: { value: string };
     };
 
-    await createTodo(
+    createTodo(
       { contents: target.contents.value },
       () => {
         close();
@@ -53,11 +53,11 @@ export function CreateModal() {
                   <Label htmlFor='todo-title'>Todo</Label>
                   <Input id='todo-title' placeholder='Enter the todo' name='contents' />
                 </div>
-                <div className='flex justify-end'>
+                <div className='flex justify-end gap-2'>
                   <Button className='bg-black text-white' onClick={close}>
-                    close
+                    Close
                   </Button>
-                  <Button className='w-32 bg-black text-white' type='submit'>
+                  <Button className='bg-black text-white' type='submit'>
                     Submit
                   </Button>
                 </div>

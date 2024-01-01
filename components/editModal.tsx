@@ -32,7 +32,7 @@ export function EditTodoModal() {
       contents: { value: string };
     };
 
-    await editTodo(
+    editTodo(
       { id, contents: target.contents.value },
       () => {
         close();
@@ -66,11 +66,11 @@ export function EditTodoModal() {
                     onChange={handleChange}
                   />
                 </div>
-                <div className='flex justify-end'>
+                <div className='flex justify-end gap-2'>
                   <Button className='bg-black text-white' onClick={close}>
-                    close
+                    Close
                   </Button>
-                  <Button className='w-32 bg-black text-white' type='submit'>
+                  <Button className='bg-black text-white' type='submit'>
                     Submit
                   </Button>
                 </div>

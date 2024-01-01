@@ -56,9 +56,11 @@ export default function Page() {
           </div>
         ))}
       </Card>
-      <Button className='bg-black text-white' onClick={openCreateModal}>
-        Add New Task
-      </Button>
+      <div className='flex justify-end'>
+        <Button className='bg-black text-white' onClick={openCreateModal}>
+          Add New Task
+        </Button>
+      </div>
     </>
   );
 }
