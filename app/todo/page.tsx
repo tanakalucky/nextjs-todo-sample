@@ -4,12 +4,28 @@ import { Card } from '@/components/ui/card';
 import { useTodos } from '@/lib/hooks';
 import { SVGProps } from 'react';
 import { Button } from '@/components/ui/button';
-import { deleteTodo, getTodos } from '@/lib/api';
+import { deleteTodo, getTodo, getTodos } from '@/lib/api';
 import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
+import { useEditTodoModalStore } from '@/store/editTodoModalStore';
 
 export default function Page() {
   const { todos, setTodos } = useTodos();
   const openCreateModal = useCreateTodoModalStore((state) => state.open);
+  const openEditModal = useEditTodoModalStore((state) => state.open);
+  const setId = useEditTodoModalStore((state) => state.setId);
+  const setContents = useEditTodoModalStore((state) => state.setContents);
+
+  const onEdit = (id: number) => {
+    getTodo(
+      id,
+      (res) => {
+        setId(res.id);
+        setContents(res.contents);
+        openEditModal();
+      },
+      (error) => console.log('error occurred', error),
+    );
+  };
 
   const onDelete = (id: number) => {
     deleteTodo(
@@ -31,7 +47,7 @@ export default function Page() {
         {todos.map((todo) => (
           <div className='flex items-center space-x-2 p-2' key={todo.id}>
             <span className='flex-grow px-2'>{todo.contents}</span>
-            <Button className='w-6 h-6 p-0 text-white bg-black'>
+            <Button className='w-6 h-6 p-0 text-white bg-black' onClick={() => onEdit(todo.id)}>
               <PencilIcon className='w-4 h-4' />
             </Button>
             <Button className='w-6 h-6 p-0 text-white bg-black' onClick={() => onDelete(todo.id)}>
