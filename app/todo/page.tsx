@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { deleteTodo, getTodo, getTodos } from '@/lib/api';
 import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
 import { useEditTodoModalStore } from '@/store/editTodoModalStore';
+import { useSpinnerStore } from '@/store/spinnerStore';
 
 export default function Page() {
   const { todos, setTodos } = useTodos();
@@ -14,29 +15,49 @@ export default function Page() {
   const openEditModal = useEditTodoModalStore((state) => state.open);
   const setId = useEditTodoModalStore((state) => state.setId);
   const setContents = useEditTodoModalStore((state) => state.setContents);
+  const show = useSpinnerStore((state) => state.show);
+  const hide = useSpinnerStore((state) => state.hide);
 
   const onEdit = (id: number) => {
+    show();
+
     getTodo(
       id,
       (res) => {
+        hide();
+
         setId(res.id);
         setContents(res.contents);
         openEditModal();
       },
-      (error) => console.log('error occurred', error),
+      (error) => {
+        hide();
+        console.log('error occurred', error);
+      },
     );
   };
 
   const onDelete = (id: number) => {
+    show();
+
     deleteTodo(
       { id },
       () => {
         getTodos(
-          (res) => setTodos(res),
-          (error) => console.log('error occurred ', error),
+          (res) => {
+            hide();
+            setTodos(res);
+          },
+          (error) => {
+            hide();
+            console.log('error occurred', error);
+          },
         );
       },
-      (error) => console.log('error occurred ', error),
+      (error) => {
+        hide();
+        console.log('error occurred', error);
+      },
     );
   };
 

@@ -12,11 +12,14 @@ import { SyntheticEvent } from 'react';
 import { useCreateTodoModalStore } from '@/store/createTodoModalStore';
 import { createTodo, getTodos } from '@/lib/api';
 import { useTodos } from '@/lib/hooks';
+import { useSpinnerStore } from '@/store/spinnerStore';
 
 export function CreateModal() {
   const isOpen = useCreateTodoModalStore((state) => state.isOpen);
   const close = useCreateTodoModalStore((state) => state.close);
   const { setTodos } = useTodos();
+  const show = useSpinnerStore((state) => state.show);
+  const hide = useSpinnerStore((state) => state.hide);
 
   const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
     e.preventDefault();
@@ -25,24 +28,36 @@ export function CreateModal() {
       contents: { value: string };
     };
 
+    show();
+
     createTodo(
       { contents: target.contents.value },
       () => {
         close();
 
         getTodos(
-          (res) => setTodos(res),
-          (error) => console.log('error occurred ', error),
+          (res) => {
+            close();
+            hide();
+            setTodos(res);
+          },
+          (error) => {
+            hide();
+            console.log('error occurred ', error);
+          },
         );
       },
-      (error) => console.log('error occurred ', error),
+      (error) => {
+        hide();
+        console.log('error occurred ', error);
+      },
     );
   };
 
   return (
     <>
       {isOpen && (
-        <div className='ma fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 z-0'>
+        <div className='ma fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-0'>
           <Card className='mx-auto my-4 p-4 w-[80vw] max-w-[500px] bg-white'>
             <CardHeader>
               <CardTitle className='text-2xl font-bold'>New Todo Item</CardTitle>
