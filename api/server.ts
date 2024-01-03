@@ -2,8 +2,11 @@
 
 import axios from 'axios';
 import { Todo } from '@/api/types';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const getTodos = async (): Promise<Todo[]> => {
+  noStore();
+
   let todos: Todo[] = [];
 
   await axios
