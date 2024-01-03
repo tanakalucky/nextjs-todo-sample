@@ -1,19 +1,47 @@
-import { useEffect } from 'react';
-import { getTodos } from '@/lib/api';
-import { useTodosStore } from '@/store';
+import { ChangeEvent, SyntheticEvent, useEffect } from 'react';
+import { useEditTodoModalStore } from '@/store/editTodoModalStore';
+import { useParams, useRouter } from 'next/navigation';
+import { editTodo, getTodo } from '@/api/client';
 
-export const useTodos = () => {
-  const todos = useTodosStore((state) => state.todos);
-  const setTodos = useTodosStore((state) => state.setTodos);
+export const useEditModal = () => {
+  const router = useRouter();
+  const params: { id: string } = useParams();
+
+  const id = params.id;
+  if (isNaN(Number(id))) throw Error(`Failed to convert string to number value = ${id}`);
+  const contents = useEditTodoModalStore((state) => state.contents);
+  const setContents = useEditTodoModalStore((state) => state.setContents);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setContents(e.target.value);
+  };
+
+  const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
+    e.preventDefault();
+
+    const target = e.target as typeof e.target & {
+      contents: { value: string };
+    };
+
+    await editTodo({ id: Number(id), contents: target.contents.value }).then(() => {
+      router.back();
+      router.refresh();
+    });
+  };
 
   useEffect(() => {
-    getTodos(
-      (res) => setTodos(res),
-      (error) => console.log('error occurred ', error),
-    );
+    // clean up
+    setContents('');
+
+    getTodo(Number(id))
+      .then((res) => {
+        setContents(res.data.item.contents);
+      })
+      .catch((error) => console.log('error ', error));
+
     // eslint-why for render first time
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { todos, setTodos };
+  return { contents, handleChange, handleSubmit };
 };

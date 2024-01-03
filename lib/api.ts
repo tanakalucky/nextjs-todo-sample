@@ -1,7 +1,7 @@
 'use server';
 
 import { Todo } from '@/lib/defenitions';
-import { get, post, put } from '@/lib/axios';
+import { put } from '@/lib/axios';
 import axios from 'axios';
 
 type Error = {
@@ -23,15 +23,6 @@ export const getTodos = async (): Promise<Todo[]> => {
   return todos;
 };
 
-export const getTodo = (id: number, handleSuccess: (res: Todo) => void, handleFailure: (error: Error) => void) => {
-  get<{ item: Todo }>(
-    `/api/todo/${id}`,
-    {},
-    (res) => handleSuccess(res.item),
-    (error) => handleFailure(error as Error),
-  );
-};
-
 type CreateTodoRequest = {
   contents: string;
 };
@@ -42,13 +33,4 @@ export const createTodo = (
   handleFailure: (error: Error) => void,
 ) => {
   put('/api/todo', data, handleSuccess, (error) => handleFailure(error as Error));
-};
-
-type EditTodoRequest = {
-  id: number;
-  contents: string;
-};
-
-export const editTodo = (data: EditTodoRequest, handleSuccess: () => void, handleFailure: (error: Error) => void) => {
-  post('/api/todo/edit', data, handleSuccess, (error) => handleFailure(error as Error));
 };
