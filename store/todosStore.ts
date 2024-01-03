@@ -1,4 +1,4 @@
-import { Todo } from '@/lib/defenitions';
+import { Todo } from '@/api/types';
 import { create } from 'zustand';
 
 type State = {
