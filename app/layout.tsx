@@ -16,7 +16,8 @@ export default function RootLayout({ children, modal }: { children: React.ReactN
     <html lang='en'>
       <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
         <div className='w-full max-w-lg mx-auto p-6 space-y-4'>
-          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+          {/* <Suspense fallback={<div>Loading...</div>}>{children}</Suspense> */}
+          {children}
         </div>
         {modal}
       </body>
