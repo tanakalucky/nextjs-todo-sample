@@ -1,7 +1,7 @@
 'use server';
 
 import { Todo } from '@/lib/defenitions';
-import { deleteAPI, get, post, put } from '@/lib/axios';
+import { get, post, put } from '@/lib/axios';
 import axios from 'axios';
 
 type Error = {
@@ -51,16 +51,4 @@ type EditTodoRequest = {
 
 export const editTodo = (data: EditTodoRequest, handleSuccess: () => void, handleFailure: (error: Error) => void) => {
   post('/api/todo/edit', data, handleSuccess, (error) => handleFailure(error as Error));
-};
-
-type DeleteTodoRequest = {
-  id: number;
-};
-
-export const deleteTodo = (
-  data: DeleteTodoRequest,
-  handleSuccess: () => void,
-  handleFailure: (error: Error) => void,
-) => {
-  deleteAPI('/api/todo/delete', data, handleSuccess, (error) => handleFailure(error as Error));
 };
