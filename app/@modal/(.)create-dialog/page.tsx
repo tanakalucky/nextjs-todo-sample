@@ -5,28 +5,10 @@ import { Button } from '@/components/ui/button';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { SyntheticEvent } from 'react';
+import { useCreateModal } from '@/hooks/createModal';
 
 export default function Page() {
-  const router = useRouter();
-
-  const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
-    e.preventDefault();
-
-    const target = e.target as typeof e.target & {
-      contents: { value: string };
-    };
-
-    await axios
-      .put('/api/todo', { contents: target.contents.value })
-      .then(() => {
-        router.back();
-        router.refresh();
-      })
-      .catch((error) => console.log('error ', error));
-  };
+  const { handleSubmit } = useCreateModal();
 
   return (
     <Modal>

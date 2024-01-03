@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card';
-import { Todo } from '@/lib/defenitions';
 import CreateButton from '@/components/createButton';
-import { getTodos } from '@/lib/api';
 import DeleteButton from '@/components/deleteButton';
 import EditButton from '@/components/editButton';
+import { getTodos } from '@/api/server';
+import { Todo } from '@/api/types';
 
 export default async function Page() {
   const todos: Todo[] = await getTodos();

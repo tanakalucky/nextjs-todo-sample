@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useEditModal } from '@/lib/hooks';
+import { useEditModal } from '@/hooks';
 
 export default function Page() {
   const { contents, handleChange, handleSubmit } = useEditModal();

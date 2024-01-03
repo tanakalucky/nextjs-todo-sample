@@ -1,5 +1,5 @@
 import { ChangeEvent, SyntheticEvent, useEffect } from 'react';
-import { useEditTodoModalStore } from '@/store/editTodoModalStore';
+import { useEditModalStore } from '@/store';
 import { useParams, useRouter } from 'next/navigation';
 import { editTodo, getTodo } from '@/api/client';
 
@@ -9,8 +9,8 @@ export const useEditModal = () => {
 
   const id = params.id;
   if (isNaN(Number(id))) throw Error(`Failed to convert string to number value = ${id}`);
-  const contents = useEditTodoModalStore((state) => state.contents);
-  const setContents = useEditTodoModalStore((state) => state.setContents);
+  const contents = useEditModalStore((state) => state.contents);
+  const setContents = useEditModalStore((state) => state.setContents);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setContents(e.target.value);

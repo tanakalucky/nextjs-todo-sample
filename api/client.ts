@@ -1,8 +1,18 @@
-import { Todo } from '@/lib/defenitions';
 import axios from 'axios';
+import { Todo } from '@/api/types';
+
+/** @note next.config.tsでリクエスト先を上書き */
 
 export const getTodo = (id: number) => {
   return axios.get<{ item: Todo }>(`/api/todo/${id}`);
+};
+
+type CreateTodoRequest = {
+  contents: string;
+};
+
+export const createTodo = (data: CreateTodoRequest) => {
+  return axios.put('/api/todo', data).catch((error) => console.log('error ', error));
 };
 
 type EditTodoRequest = {
