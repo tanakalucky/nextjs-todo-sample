@@ -1,17 +1,26 @@
+'use server';
+
 import { Todo } from '@/lib/defenitions';
 import { deleteAPI, get, post, put } from '@/lib/axios';
+import axios from 'axios';
 
 type Error = {
   message: string;
 };
 
-export const getTodos = (handleSuccess: (res: Todo[]) => void, handleFailure: (error: Error) => void) => {
-  get<{ items: Todo[] }>(
-    `/api/todo`,
-    {},
-    (res) => handleSuccess(res.items),
-    (error) => handleFailure(error as Error),
-  );
+export const getTodos = async (): Promise<Todo[]> => {
+  let todos: Todo[] = [];
+
+  await axios
+    .get<{ items: Todo[] }>(`${process.env.API_URL}/todo`)
+    .then((res) => {
+      todos = res.data.items;
+    })
+    .catch((e) => {
+      console.log('error ', e);
+    });
+
+  return todos;
 };
 
 export const getTodo = (id: number, handleSuccess: (res: Todo) => void, handleFailure: (error: Error) => void) => {

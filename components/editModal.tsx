@@ -40,17 +40,17 @@ export function EditTodoModal() {
     editTodo(
       { id, contents: target.contents.value },
       () => {
-        getTodos(
-          (res) => {
-            close();
-            hide();
-            setTodos(res);
-          },
-          (error) => {
-            hide();
-            console.log('error occurred ', error);
-          },
-        );
+        // getTodos(
+        //   (res) => {
+        //     close();
+        //     hide();
+        //     setTodos(res);
+        //   },
+        //   (error) => {
+        //     hide();
+        //     console.log('error occurred ', error);
+        //   },
+        // );
       },
       (error) => {
         hide();
